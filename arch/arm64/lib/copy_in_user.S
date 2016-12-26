@@ -7,7 +7,7 @@
 
 #include <linux/linkage.h>
 
-#include <linux/uaccess.h>
+#include <asm/asm-uaccess.h>
 #include <asm/assembler.h>
 #include <asm/cache.h>
 
