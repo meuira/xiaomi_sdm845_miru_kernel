@@ -390,11 +390,9 @@ void tcp_update_metrics(struct sock *sk)
 	u32 val;
 	int m;
 
+	sk_dst_confirm(sk);
 	if (sysctl_tcp_nometrics_save || !dst)
 		return;
-
-	if (dst->flags & DST_HOST)
-		dst_confirm(dst);
 
 	rcu_read_lock();
 	if (icsk->icsk_backoff || !tp->srtt_us) {
@@ -512,13 +510,13 @@ void tcp_init_metrics(struct sock *sk)
 	 * 3WHS. Restore it back to its initial default.
 	 */
 	tp->snd_ssthresh = TCP_INFINITE_SSTHRESH;
+	sk_dst_confirm(sk);
 	if (!dst)
 		goto reset;
 
-	dst_confirm(dst);
-
 	rcu_read_lock();
 	tm = tcp_get_metrics(sk, dst, false);
+
 	if (!tm) {
 		rcu_read_unlock();
 		goto reset;
