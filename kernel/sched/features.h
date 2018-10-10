@@ -110,3 +110,9 @@ SCHED_FEAT(FBT_STRICT_ORDER, false)
 SCHED_FEAT(EAS_USE_NEED_IDLE, true)
 
 SCHED_FEAT(SUGOV_RT_MAX_FREQ, false)
+
+/*
+ * Use the Simplified Energy Model for EAS accounting only for
+ * active costs of CPUs.
+ */
+SCHED_FEAT(EAS_SIMPLIFIED_EM, true)
