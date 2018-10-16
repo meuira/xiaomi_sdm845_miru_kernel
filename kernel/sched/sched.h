@@ -3378,12 +3378,10 @@ find_first_cpu_bit(struct task_struct *p, const cpumask_t *search_cpus,
 #define find_first_cpu_bit(...) -1
 #endif
 
-#ifdef CONFIG_SMP
-#ifdef CONFIG_ENERGY_MODEL
+#if defined(CONFIG_ENERGY_MODEL) && defined(CONFIG_CPU_FREQ_GOV_SCHEDUTIL)
 #define perf_domain_span(pd) (to_cpumask(((pd)->obj->cpus)))
 #else
 #define perf_domain_span(pd) NULL
-#endif
 #endif
 
 static inline void sched_irq_work_queue(struct irq_work *work)
