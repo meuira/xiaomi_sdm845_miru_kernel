@@ -3043,6 +3043,7 @@ int wake_up_state(struct task_struct *p, unsigned int state)
 {
 	return try_to_wake_up(p, state, 0);
 }
+EXPORT_SYMBOL_GPL(wake_up_state);
 
 #ifdef CONFIG_SCHED_BORE
 extern u8   sched_burst_fork_atavistic;
