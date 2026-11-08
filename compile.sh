@@ -18,6 +18,7 @@ KERNEL_NAME="Miru"
 EXTRAVERSION="Aonami"
 
 DO_CLEAN="true"
+GPU_FREQ="710"
 
 export PATH="${CLANG_BIN}:${PATH}"
 export ARCH="${ARCH}"
@@ -47,6 +48,30 @@ MAKE_ARGS=(
 	CLANG_TRIPLE="aarch64-linux-gnu-"
 	LOCALVERSION="-美瑠/${KERNEL_NAME}-${EXTRAVERSION}"
 )
+
+apply_gpu_freq() {
+	restore_gpu_freq
+	if [ "${GPU_FREQ}" = "710" ]; then
+		echo "Used default GPU clock frequency"
+		return
+	fi
+
+	local GPU_FREQ_PATCH="${KERNEL_DIR}/patches/overclock/sdm845-gpu-clock-frequency-${GPU_FREQ}.patch"
+	if [ -f "${GPU_FREQ_PATCH}" ]; then
+		patch -p1 -d "${KERNEL_DIR}" < "${GPU_FREQ_PATCH}"
+		echo "Updated GPU clock frequency to ${GPU_FREQ}"
+	else
+		echo "Failed update GPU clock frequency"
+		exit 1
+	fi
+}
+
+restore_gpu_freq() {
+	echo "Restoring stock GPU clock frequency"
+	git checkout -- "${KERNEL_DIR}" \
+		arch/arm64/boot/dts/qcom/sdm845-v2.dtsi \
+		drivers/clk/qcom/gpucc-sdm845.c 2>/dev/null || true
+}
 
 hard_clean() {
 	make mrproper
@@ -116,16 +141,17 @@ build_kernel() {
 
 package_anykernel() {
 	local variant="${1:-dynamic}"
+	local freq="${2:-710}"
 
 	echo "Packaging kernel with AnyKernel3"
 
 	local current_name="${KERNEL_NAME}-${EXTRAVERSION}"
 	if [ "${variant}" = "dynamic" ]; then
-		current_name="${current_name}-Dynamic"
+		current_name="${current_name}-Dynamic-GPU-${freq}"
 	elif [ "${variant}" = "nse" ]; then
-		current_name="${current_name}-NSE"
+		current_name="${current_name}-NSE-GPU-${freq}"
 	elif [ "${variant}" = "se" ]; then
-		current_name="${current_name}-SE"
+		current_name="${current_name}-SE-GPU-${freq}"
 	fi
 
 	if [ -d "${ANYKERNEL_DIR}" ]; then
@@ -158,9 +184,15 @@ run_release_builds() {
 	make -C "${KERNEL_DIR}" "${MAKE_ARGS[@]}" "${DEFCONFIG}"
 
 	local -a release_commands=(
-		"--dynamic"
-		"--nse"
-		"--se"
+		"--dynamic --710"
+		"--dynamic --820"
+		"--dynamic --835"
+		"--nse --710"
+		"--nse --820"
+		"--nse --835"
+		"--se --710"
+		"--se --820"
+		"--se --835"
 	)
 
 	for release_command in "${release_commands[@]}"; do
@@ -182,6 +214,15 @@ main() {
 
 	for arg in "$@"; do
 		case "${arg}" in
+			--710)
+			    GPU_FREQ="710"
+			    ;;
+			--820)
+			    GPU_FREQ="820"
+			    ;;
+			--835)
+			    GPU_FREQ="835"
+			    ;;
 			--dynamic)
 			    VARIANT="dynamic"
 			    ;;
@@ -204,16 +245,17 @@ main() {
 		esac
 	done
 
-	trap 'restore_fstab_variant' EXIT
+	trap 'restore_fstab_variant; restore_gpu_freq' EXIT
 
 	if [ "${DO_CLEAN}" = "true" ]; then
 		hard_clean
 	fi
 
 	make -C "${KERNEL_DIR}" "${MAKE_ARGS[@]}" "${DEFCONFIG}"
+	apply_gpu_freq
 	apply_fstab_variant
 	build_kernel
-	package_anykernel "${VARIANT}"
+	package_anykernel "${VARIANT}" "${GPU_FREQ}"
 }
 
 main "$@"
