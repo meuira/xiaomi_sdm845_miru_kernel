@@ -39,10 +39,6 @@ config ZRAM_MEMORY_TRACKING
 
 	  See Documentation/blockdev/zram.txt for more information.
 
-config ZRAM_DEFAULT_COMP_ALGORITHM
-	string "Default ZRAM algorithm"
-	default "lzo"
-
 config ZRAM_SIZE_AUTO
 	bool "Auto-detect zram size based on RAM"
 	default n
