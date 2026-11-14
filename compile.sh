@@ -15,7 +15,6 @@ ARCH="arm64"
 DEFCONFIG="beryllium_defconfig"
 KERNEL_IMAGE="Image.gz-dtb"
 KERNEL_NAME="Miru"
-EXTRAVERSION="Aonami"
 
 DO_CLEAN="true"
 GPU_FREQ="710"
@@ -47,7 +46,7 @@ MAKE_ARGS=(
 	CROSS_COMPILE="aarch64-linux-gnu-"
 	CROSS_COMPILE_ARM32="arm-linux-gnueabi-"
 	CLANG_TRIPLE="aarch64-linux-gnu-"
-	LOCALVERSION="-美瑠/${KERNEL_NAME}-${EXTRAVERSION}"
+	LOCALVERSION="-美瑠/${KERNEL_NAME}"
 )
 
 apply_gpu_freq() {
@@ -146,7 +145,7 @@ package_anykernel() {
 
 	echo "Packaging kernel with AnyKernel3"
 
-	local current_name="${KERNEL_NAME}-${EXTRAVERSION}"
+	local current_name="${KERNEL_NAME}"
 	if [ "${variant}" = "dynamic" ]; then
 		current_name="${current_name}-Dynamic-GPU-${freq}"
 	elif [ "${variant}" = "nse" ]; then
