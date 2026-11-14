@@ -966,6 +966,7 @@ enum hrtimer_restart tcp_pace_kick(struct hrtimer *timer)
 	return HRTIMER_NORESTART;
 }
 
+#if 0
 static void tcp_internal_pacing(struct sock *sk, const struct sk_buff *skb)
 {
 	u64 len_ns;
@@ -983,6 +984,7 @@ static void tcp_internal_pacing(struct sock *sk, const struct sk_buff *skb)
 		      ktime_add_ns(ktime_get(), len_ns),
 		      HRTIMER_MODE_ABS_PINNED);
 }
+#endif
 
 /* This routine actually transmits TCP packets queued in by
  * tcp_do_sendmsg().  This is used by both the initial
@@ -1109,7 +1111,9 @@ static int __tcp_transmit_skb(struct sock *sk, struct sk_buff *skb,
 	if (skb->len != tcp_header_size) {
 		tcp_event_data_sent(tp, sk);
 		tp->data_segs_out += tcp_skb_pcount(skb);
+#if 0
 		tcp_internal_pacing(sk, skb);
+#endif
 	}
 
 	if (after(tcb->end_seq, tp->snd_nxt) || tcb->seq == tcb->end_seq)
@@ -2242,11 +2246,13 @@ static int tcp_mtu_probe(struct sock *sk)
 	return -1;
 }
 
+#if 0
 static bool tcp_pacing_check(const struct sock *sk)
 {
 	return tcp_needs_internal_pacing(sk) &&
 	       hrtimer_active(&tcp_sk(sk)->pacing_timer);
 }
+#endif
 
 /* TCP Small Queues :
  * Control number of packets in qdisc/devices to two packets / or ~1 ms.
@@ -2373,8 +2379,10 @@ static bool tcp_write_xmit(struct sock *sk, unsigned int mss_now, int nonagle,
 	while ((skb = tcp_send_head(sk))) {
 		unsigned int limit;
 
+#if 0
 		if (tcp_pacing_check(sk))
 			break;
+#endif
 
 		tso_segs = tcp_init_tso_segs(skb, mss_now);
 		BUG_ON(!tso_segs);
@@ -3078,8 +3086,10 @@ void tcp_xmit_retransmit_queue(struct sock *sk)
 		if (skb == tcp_send_head(sk))
 			break;
 
+#if 0
 		if (tcp_pacing_check(sk))
 			break;
+#endif
 
 		/* we could do better than to assign each time */
 		if (!hole)

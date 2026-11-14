@@ -422,10 +422,12 @@ static int fq_enqueue(struct sk_buff *skb, struct Qdisc *sch,
 		if (time_after(jiffies, f->age + q->flow_refill_delay))
 			f->credit = max_t(u32, f->credit, q->quantum);
 		if (sk && q->rate_enable) {
+#if 0
 			if (unlikely(smp_load_acquire(&sk->sk_pacing_status) !=
 				     SK_PACING_FQ))
 				smp_store_release(&sk->sk_pacing_status,
 						  SK_PACING_FQ);
+#endif
 		}
 		q->inactive_flows--;
 	}

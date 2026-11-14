@@ -2124,7 +2124,9 @@ static void bbr_init(struct sock *sk)
 	bbr->prior_rcv_nxt = tp->rcv_nxt;
 	bbr->try_fast_path = 0;
 
+#if 0
 	cmpxchg(&sk->sk_pacing_status, SK_PACING_NONE, SK_PACING_NEEDED);
+#endif
 
 	/* Start sampling ECN mark rate after first full flight is ACKed: */
 	bbr->loss_round_delivered = tp->delivered + 1;
