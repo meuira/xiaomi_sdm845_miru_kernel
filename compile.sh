@@ -14,7 +14,7 @@ ARCH="arm64"
 
 DEFCONFIG="beryllium_defconfig"
 KERNEL_IMAGE="Image.gz-dtb"
-KERNEL_NAME="Miru"
+KERNEL_NAME="perf"
 
 DO_CLEAN="true"
 GPU_FREQ="710"
@@ -22,8 +22,8 @@ GPU_FREQ="710"
 export PATH="${CLANG_BIN}:${PATH}"
 export ARCH="${ARCH}"
 export SUBARCH="${ARCH}"
-export KBUILD_BUILD_USER=miru
-export KBUILD_BUILD_HOST=archlinux
+export KBUILD_BUILD_USER=build-user
+export KBUILD_BUILD_HOST=build-host
 export KBUILD_COMPILER_STRING="Android (14054515, +pgo, +bolt, +lto, +mlgo, based on r563880c) clang version 21.0.0 (https://android.googlesource.com/toolchain/llvm-project 5e96669f06077099aa41290cdb4c5e6fa0f59349), LLD 21.0.0 (/mnt/disks/build-disk/src/googleplex-android/llvm-r563880-release/out/llvm-project/llvm 5e96669f06077099aa41290cdb4c5e6fa0f59349)"
 
 MAKE_ARGS=(
@@ -46,7 +46,7 @@ MAKE_ARGS=(
 	CROSS_COMPILE="aarch64-linux-gnu-"
 	CROSS_COMPILE_ARM32="arm-linux-gnueabi-"
 	CLANG_TRIPLE="aarch64-linux-gnu-"
-	LOCALVERSION="-美瑠/${KERNEL_NAME}"
+	LOCALVERSION="-${KERNEL_NAME}"
 )
 
 apply_gpu_freq() {
@@ -145,7 +145,7 @@ package_anykernel() {
 
 	echo "Packaging kernel with AnyKernel3"
 
-	local current_name="${KERNEL_NAME}"
+	local current_name="Perf"
 	if [ "${variant}" = "dynamic" ]; then
 		current_name="${current_name}-Dynamic-GPU-${freq}"
 	elif [ "${variant}" = "nse" ]; then
