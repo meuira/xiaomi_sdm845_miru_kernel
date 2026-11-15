@@ -62,42 +62,49 @@
  */
 #define DMA_ATTR_NO_WARN	(1UL << 8)
 /*
+ * This is a hint to the DMA-mapping subsystem that the device is expected
+ * to overwrite the entire mapped size, thus the caller does not require any
+ * of the previous buffer contents to be preserved. This allows
+ * bounce-buffering implementations to optimise DMA_FROM_DEVICE transfers.
+ */
+#define DMA_ATTR_OVERWRITE		(1UL << 9)
+/*
  * DMA_ATTR_STRONGLY_ORDERED: Specifies that accesses to the mapping must
  * not be buffered, reordered, merged with other accesses, or unaligned.
  * No speculative access may occur in this mapping.
  */
-#define DMA_ATTR_STRONGLY_ORDERED	(1UL << 9)
+#define DMA_ATTR_STRONGLY_ORDERED	(1UL << 10)
 /*
  * DMA_ATTR_SKIP_ZEROING: Do not zero mapping.
  */
-#define DMA_ATTR_SKIP_ZEROING		(1UL << 10)
+#define DMA_ATTR_SKIP_ZEROING		(1UL << 11)
 /*
  * DMA_ATTR_NO_DELAYED_UNMAP: Used by msm specific lazy mapping to indicate
  * that the mapping can be freed on unmap, rather than when the ion_buffer
  * is freed.
  */
-#define DMA_ATTR_NO_DELAYED_UNMAP	(1UL << 11)
+#define DMA_ATTR_NO_DELAYED_UNMAP	(1UL << 12)
 /*
  * DMA_ATTR_EXEC_MAPPING: The mapping has executable permissions.
  */
-#define DMA_ATTR_EXEC_MAPPING		(1UL << 12)
+#define DMA_ATTR_EXEC_MAPPING		(1UL << 13)
 /*
  * DMA_ATTR_IOMMU_USE_UPSTREAM_HINT: Normally an smmu will override any bus
  * attributes (i.e cacheablilty) provided by the client device. Some hardware
  * may be designed to use the original attributes instead.
  */
-#define DMA_ATTR_IOMMU_USE_UPSTREAM_HINT	(1UL << 13)
+#define DMA_ATTR_IOMMU_USE_UPSTREAM_HINT	(1UL << 14)
 /*
  * When passed to a DMA map call the DMA_ATTR_FORCE_COHERENT DMA
  * attribute can be used to force a buffer to be mapped as IO coherent.
  */
-#define DMA_ATTR_FORCE_COHERENT			(1UL << 14)
+#define DMA_ATTR_FORCE_COHERENT			(1UL << 15)
 /*
  * When passed to a DMA map call the DMA_ATTR_FORCE_NON_COHERENT DMA
  * attribute can be used to force a buffer to not be mapped as IO
  * coherent.
  */
-#define DMA_ATTR_FORCE_NON_COHERENT		(1UL << 15)
+#define DMA_ATTR_FORCE_NON_COHERENT		(1UL << 16)
 
 /*
  * A dma_addr_t can hold any valid DMA or bus address for the platform.
