@@ -903,14 +903,6 @@ static void elf_hwcap_fixup(void)
 #endif /* ARM64_ERRATUM_1742098 */
 }
 
-static bool has_no_fpsimd(const struct arm64_cpu_capabilities *entry, int __unused)
-{
-	u64 pfr0 = read_system_reg(SYS_ID_AA64PFR0_EL1);
-
-	return cpuid_feature_extract_signed_field(pfr0,
-					ID_AA64PFR0_FP_SHIFT) < 0;
-}
-
 static const struct arm64_cpu_capabilities arm64_features[] = {
 	{
 		.desc = "GIC system register CPU interface",
@@ -1015,13 +1007,6 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
 		.sys_reg = SYS_ID_AA64ISAR0_EL1,
 		.field_pos = ID_AA64ISAR0_CRC32_SHIFT,
 		.min_field_value = 1,
-	},
-	{
-		/* FP/SIMD is not implemented */
-		.capability = ARM64_HAS_NO_FPSIMD,
-		.def_scope = SCOPE_SYSTEM,
-		.min_field_value = 0,
-		.matches = has_no_fpsimd,
 	},
 	{},
 };
