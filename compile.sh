@@ -15,7 +15,7 @@ ARCH="arm64"
 DEFCONFIG="beryllium_defconfig"
 KERNEL_IMAGE="Image.gz-dtb"
 KERNEL_NAME="Miru"
-EXTRAVERSION="Aonami"
+EXTRAVERSION="Setsuna"
 
 DO_CLEAN="true"
 GPU_FREQ="710"
