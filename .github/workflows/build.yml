@@ -59,10 +59,6 @@ jobs:
         mkdir -p tools
         git clone --depth=1 https://github.com/meuira/AnyKernel3.git tools/AnyKernel3
 
-    - name: Clone KernelSU
-      run: |
-        curl -LSs "https://raw.githubusercontent.com/backslashxx/KernelSU/master/kernel/setup.sh" | bash -
-
     - name: Run Compile Script
       run: |
         chmod +x compile.sh
