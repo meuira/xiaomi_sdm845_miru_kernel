@@ -20,7 +20,6 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v4
       with:
-        submodules: recursive
         fetch-depth: 0
 
     - name: Setup Environment
@@ -63,10 +62,6 @@ jobs:
       run: |
         chmod +x compile.sh
         ./compile.sh --release
-
-    - name: Check Submodule Status
-      run: |
-        git submodule status
 
     - name: Upload Kernel Artifact
       uses: actions/upload-artifact@v4
